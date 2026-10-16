@@ -244,6 +244,7 @@ input::placeholder {
   .card {
     padding: 23px 18px;
   }
+
   .brand h1 {
     font-size: 25px;
   }
@@ -354,31 +355,14 @@ input::placeholder {
 </main>
 
 <script>
+/* تنظیمات پروژه */
 
-/* =====================================================
-   🔴🔴🔴 بخش اتصال شماره ۱: آدرس پروژه 🔴🔴🔴
+const SUPABASE_URL = "https://ewdsxuoimazoibfzuhih.supabase.co";
 
-   عبارت داخل کوتیشن را با API URL خودت عوض کن.
-   آدرس را از Supabase > Data API برداشتی.
-   ===================================================== */
-
-const SUPABASE_URL = "https://ewdsxuoimazoibfzuhih.supabase.co/rest/v1/ ;
+const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_WGnkiOWxaEQYs89xxkLp2Q_HCUBbSfw";
 
 
-/* =====================================================
-   🔴🔴🔴 بخش اتصال شماره ۲: کلید عمومی 🔴🔴🔴
-
-   عبارت داخل کوتیشن را با Publishable key خودت عوض کن.
-   کلید را از Project Settings > API Keys برداشتی.
-   ===================================================== */
-
-const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_WGnkiOWxaEQYs89xxkLp2Q_HCUBbSfw ;
-
-
-/* =====================================================
-   از این خط به بعد، کد اصلی سایت است.
-   این بخش‌ها را تغییر نده.
-   ===================================================== */
+/* عناصر صفحه */
 
 const loginTab = document.getElementById("loginTab");
 const registerTab = document.getElementById("registerTab");
@@ -401,6 +385,9 @@ const messageBox = document.getElementById("message");
 let mode = "login";
 let client = null;
 
+
+/* نمایش پیام */
+
 function showMessage(text, type) {
   messageBox.textContent = text;
   messageBox.className = "message show " + type;
@@ -410,6 +397,9 @@ function clearMessage() {
   messageBox.textContent = "";
   messageBox.className = "message";
 }
+
+
+/* تغییر بین ورود و ثبت‌نام */
 
 function setMode(nextMode) {
   mode = nextMode;
@@ -443,6 +433,9 @@ function setMode(nextMode) {
 loginTab.addEventListener("click", () => setMode("login"));
 registerTab.addEventListener("click", () => setMode("register"));
 
+
+/* مدیریت خطاها */
+
 function friendlyError(error) {
   const text = String(error.message || "").toLowerCase();
 
@@ -454,10 +447,7 @@ function friendlyError(error) {
     return "این ایمیل قبلاً ثبت شده؛ وارد حسابت شو.";
   }
 
-  if (
-    text.includes("duplicate key") ||
-    text.includes("profiles_username_lower_unique")
-  ) {
+  if (text.includes("duplicate key")) {
     return "این نام کاربری قبلاً انتخاب شده؛ یکی دیگه انتخاب کن.";
   }
 
@@ -465,26 +455,22 @@ function friendlyError(error) {
     return "رمز عبور کوتاهه؛ یک رمز قوی‌تر انتخاب کن.";
   }
 
-  if (text.includes("user already registered")) {
-    return "این ایمیل قبلاً ثبت شده.";
-  }
-
   if (text.includes("fetch")) {
-    return "اتصال برقرار نشد؛ آدرس پروژه و اینترنت رو بررسی کن.";
+    return "اتصال برقرار نشد؛ اینترنت و تنظیمات پروژه رو بررسی کن.";
   }
 
-  return "عملیات انجام نشد. اتصال و اطلاعات واردشده رو بررسی کن.";
+  return "عملیات انجام نشد. لطفاً اطلاعات رو بررسی کن و دوباره تلاش کن.";
 }
+
+
+/* ثبت‌نام و ورود */
 
 accountForm.addEventListener("submit", async (event) => {
   event.preventDefault();
   clearMessage();
 
   if (!client) {
-    showMessage(
-      "اتصال هنوز تنظیم نشده. دو مقدار ابتدای کد را بررسی کن.",
-      "error"
-    );
+    showMessage("اتصال به Supabase برقرار نشده.", "error");
     return;
   }
 
@@ -521,12 +507,10 @@ accountForm.addEventListener("submit", async (event) => {
       }
 
       const { data, error } = await client.auth.signUp({
-        email: email,
-        password: password,
+        email,
+        password,
         options: {
-          data: {
-            username: username
-          }
+          data: { username }
         }
       });
 
@@ -539,15 +523,15 @@ accountForm.addEventListener("submit", async (event) => {
         );
       } else {
         showMessage(
-          "ثبت‌نام انجام شد! ایمیلت رو بررسی کن و در صورت درخواست، حسابت رو تأیید کن.",
+          "ثبت‌نام انجام شد! ایمیلت رو بررسی کن و حسابت رو تأیید کن.",
           "success"
         );
       }
 
     } else {
       const { error } = await client.auth.signInWithPassword({
-        email: email,
-        password: password
+        email,
+        password
       });
 
       if (error) throw error;
@@ -569,10 +553,11 @@ accountForm.addEventListener("submit", async (event) => {
 });
 
 
-/* ساخت اتصال Supabase */
+/* اتصال به Supabase */
 
 try {
   if (
+    window.supabase &&
     SUPABASE_URL.startsWith("https://") &&
     SUPABASE_PUBLISHABLE_KEY.startsWith("sb_publishable_")
   ) {
@@ -582,8 +567,12 @@ try {
     );
   }
 } catch (error) {
+  console.error("Supabase connection error:", error);
   client = null;
 }
+
+
+/* نمایش اولیه */
 
 setMode("login");
 
