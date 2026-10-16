@@ -3,489 +3,249 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>گل یا پوچ | ورود به بازی</title>
 
-<title>GOL YA POOCH | بازی از نو آغاز می‌شود</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&display=swap');
-
-:root {
-  --bg: #080808;
-  --panel: #101010;
-  --white: #f5f5f5;
-  --gray: #777;
-  --border: #292929;
-}
-
 * {
   box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
 body {
-  margin: 0;
   min-height: 100vh;
-  background: var(--bg);
-  color: var(--white);
-  font-family: 'Vazirmatn', Tahoma, sans-serif;
-  overflow-x: hidden;
-}
-
-button, input {
-  font: inherit;
-}
-
-button {
-  cursor: pointer;
+  background: #080808;
+  color: #f5f5f5;
+  font-family: Tahoma, Arial, sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 22px;
 }
 
 .background {
   position: fixed;
   inset: 0;
-  pointer-events: none;
   overflow: hidden;
-  z-index: -1;
+  pointer-events: none;
 }
 
-.background::before {
-  content: "";
+.circle {
   position: absolute;
-  width: 500px;
-  height: 500px;
-  border: 1px solid #202020;
+  border: 1px solid #303030;
   border-radius: 50%;
-  top: -250px;
-  left: -160px;
-  box-shadow:
-    0 0 0 50px #0b0b0b,
-    0 0 0 51px #191919,
-    0 0 0 110px #0b0b0b,
-    0 0 0 111px #161616;
-  animation: rotate 45s linear infinite;
+  animation: float 12s ease-in-out infinite alternate;
 }
 
-.background::after {
-  content: "";
-  position: absolute;
-  width: 340px;
-  height: 340px;
-  border: 1px solid #222;
-  border-radius: 50%;
-  bottom: -180px;
+.one {
+  width: 350px;
+  height: 350px;
+  top: -150px;
   right: -100px;
-  box-shadow: 0 0 0 45px #0b0b0b, 0 0 0 46px #181818;
 }
 
-@keyframes rotate {
-  to { transform: rotate(360deg); }
+.two {
+  width: 280px;
+  height: 280px;
+  bottom: -120px;
+  left: -90px;
 }
 
-.topbar {
-  height: 78px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 7%;
-  border-bottom: 1px solid #1c1c1c;
+.three {
+  width: 120px;
+  height: 120px;
+  top: 15%;
+  left: 12%;
+}
+
+@keyframes float {
+  from { transform: translateY(0) rotate(0); }
+  to { transform: translateY(24px) rotate(25deg); }
+}
+
+.container {
+  width: 100%;
+  max-width: 410px;
+  position: relative;
+  z-index: 1;
 }
 
 .brand {
-  display: flex;
-  align-items: center;
-  gap: 12px;
+  text-align: center;
+  margin-bottom: 27px;
 }
 
-.brand-symbol {
-  width: 37px;
-  height: 37px;
+.logo {
+  width: 76px;
+  height: 76px;
   border: 1px solid #777;
-  display: grid;
-  place-items: center;
   transform: rotate(45deg);
-}
-
-.brand-symbol span {
-  transform: rotate(-45deg);
-  font-size: 18px;
-}
-
-.brand-name {
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: 3px;
-  direction: ltr;
-}
-
-.brand-name small {
-  display: block;
-  color: #777;
-  font-size: 9px;
-  font-weight: 400;
-  letter-spacing: 4px;
-  margin-top: 3px;
-}
-
-.status {
-  color: #858585;
-  font-size: 10px;
-  letter-spacing: 1px;
-}
-
-.status::before {
-  content: "";
-  display: inline-block;
-  width: 6px;
-  height: 6px;
-  background: #ddd;
-  border-radius: 50%;
-  margin-left: 8px;
-  box-shadow: 0 0 10px #fff;
-}
-
-main {
-  min-height: calc(100vh - 130px);
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 48px 20px;
+  margin: 0 auto 25px;
+  background: #111;
 }
 
-.layout {
-  width: 100%;
-  max-width: 1000px;
-  display: grid;
-  grid-template-columns: 1fr 0.9fr;
-  align-items: center;
-  gap: 75px;
-  animation: appear .8s ease both;
-}
-
-@keyframes appear {
-  from {
-    opacity: 0;
-    transform: translateY(15px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.intro {
-  position: relative;
-}
-
-.eyebrow {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  color: #aaa;
-  font-size: 11px;
-  letter-spacing: 2px;
-  margin-bottom: 28px;
-}
-
-.eyebrow::before {
-  content: "";
-  width: 34px;
-  height: 1px;
-  background: #aaa;
-}
-
-.big-logo {
-  width: 106px;
-  height: 106px;
-  border: 1px solid #555;
-  transform: rotate(45deg);
-  margin: 0 20px 45px 0;
-  display: grid;
-  place-items: center;
-  position: relative;
-}
-
-.big-logo::before {
-  content: "";
-  position: absolute;
-  inset: 9px;
-  border: 1px solid #333;
-}
-
-.big-logo span {
+.logo span {
   transform: rotate(-45deg);
-  font-size: 42px;
-  font-weight: 300;
+  font-size: 32px;
+  font-weight: bold;
 }
 
-.intro h1 {
-  font-size: clamp(35px, 5vw, 57px);
-  line-height: 1.5;
-  margin: 0 0 10px;
-  font-weight: 800;
+.brand h1 {
+  font-size: 29px;
+  margin-bottom: 10px;
 }
 
-.intro h1 span {
-  display: block;
-  color: #777;
-  font-size: clamp(20px, 3vw, 30px);
-  font-weight: 300;
-  direction: ltr;
-  letter-spacing: 5px;
-}
-
-.description {
-  max-width: 370px;
-  color: #888;
-  font-size: 13px;
-  line-height: 2.4;
-  margin-top: 25px;
-}
-
-.decorative-line {
-  width: 150px;
-  height: 1px;
-  background: linear-gradient(to left, #aaa, transparent);
-  margin-top: 35px;
-}
-
-.panel {
-  width: 100%;
-  max-width: 410px;
-  justify-self: end;
-  padding: 34px;
-  background: linear-gradient(145deg, #121212, #0b0b0b);
-  border: 1px solid #292929;
-  position: relative;
-  box-shadow: 0 25px 80px #0008;
-}
-
-.panel::before,
-.panel::after {
-  content: "";
-  position: absolute;
-  width: 28px;
-  height: 28px;
-  border-color: #aaa;
-  border-style: solid;
-}
-
-.panel::before {
-  top: -1px;
-  right: -1px;
-  border-width: 1px 1px 0 0;
-}
-
-.panel::after {
-  bottom: -1px;
-  left: -1px;
-  border-width: 0 0 1px 1px;
-}
-
-.panel-heading {
-  margin-bottom: 26px;
-}
-
-.panel-heading .number {
-  color: #777;
-  font-size: 10px;
-  letter-spacing: 3px;
-  direction: ltr;
-  text-align: right;
-}
-
-.panel-heading h2 {
-  font-size: 25px;
-  margin: 10px 0 5px;
-}
-
-.panel-heading p {
-  color: #888;
+.brand p {
+  color: #999;
   font-size: 12px;
-  margin: 0;
   line-height: 2;
+}
+
+.card {
+  border: 1px solid #292929;
+  background: rgba(15, 15, 15, .97);
+  padding: 27px 23px;
+  border-radius: 15px;
+  box-shadow: 0 20px 70px #000;
 }
 
 .tabs {
   display: flex;
-  gap: 6px;
+  gap: 8px;
   padding: 5px;
-  background: #080808;
-  border: 1px solid #222;
+  border: 1px solid #292929;
+  border-radius: 9px;
   margin-bottom: 25px;
+  background: #090909;
 }
 
 .tab {
   flex: 1;
-  padding: 11px 5px;
+  padding: 12px 5px;
+  color: #999;
   background: transparent;
-  border: 1px solid transparent;
-  color: #777;
-  font-size: 12px;
-  transition: .2s;
+  border: 0;
+  border-radius: 6px;
+  font-family: inherit;
+  cursor: pointer;
+  font-size: 13px;
 }
 
 .tab.active {
-  color: #fff;
-  background: #1a1a1a;
-  border-color: #373737;
+  background: #f1f1f1;
+  color: #111;
+  font-weight: bold;
+}
+
+h2 {
+  font-size: 21px;
+  margin-bottom: 9px;
+}
+
+.subtitle {
+  color: #888;
+  font-size: 12px;
+  line-height: 2;
+  margin-bottom: 24px;
 }
 
 .field {
   margin-bottom: 17px;
 }
 
-.field label {
+label {
   display: block;
   font-size: 12px;
-  color: #c5c5c5;
+  color: #c8c8c8;
   margin-bottom: 9px;
 }
 
-.field input {
+input {
   width: 100%;
-  height: 47px;
-  border: 1px solid #303030;
-  outline: none;
+  padding: 14px;
   background: #090909;
-  color: #fff;
-  padding: 0 13px;
-  border-radius: 0;
+  color: white;
+  border: 1px solid #343434;
+  border-radius: 8px;
+  outline: none;
+  font-family: inherit;
   font-size: 13px;
-  transition: .2s;
+  direction: ltr;
+  text-align: left;
 }
 
-.field input:focus {
+input:focus {
   border-color: #aaa;
-  box-shadow: 0 0 0 2px #ffffff08;
 }
 
-.field input::placeholder {
-  color: #505050;
+input::placeholder {
+  color: #606060;
 }
 
-.primary {
+.submit {
   width: 100%;
-  height: 49px;
-  border: 1px solid #fff;
-  background: #f2f2f2;
-  color: #080808;
-  font-weight: 700;
+  padding: 15px;
+  background: #f1f1f1;
+  color: #090909;
+  border: 0;
+  border-radius: 8px;
+  font-family: inherit;
   font-size: 14px;
-  margin-top: 7px;
-  transition: .2s;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 5px;
 }
 
-.primary:hover {
-  background: #d6d6d6;
-  transform: translateY(-1px);
+.submit:disabled {
+  opacity: .55;
+  cursor: wait;
 }
 
 .message {
   display: none;
-  margin-top: 15px;
-  padding: 12px;
-  border: 1px solid #383838;
-  color: #bbb;
   font-size: 12px;
   line-height: 2;
+  padding: 12px;
+  margin-top: 17px;
+  border-radius: 7px;
   overflow-wrap: anywhere;
 }
 
-.security-note {
-  display: flex;
-  align-items: flex-start;
-  gap: 9px;
-  color: #666;
+.message.show {
+  display: block;
+}
+
+.message.success {
+  background: #102016;
+  border: 1px solid #28563a;
+  color: #b5efc5;
+}
+
+.message.error {
+  background: #261111;
+  border: 1px solid #633030;
+  color: #ffc1c1;
+}
+
+.footer {
+  text-align: center;
+  color: #656565;
   font-size: 10px;
-  line-height: 2;
-  margin-top: 22px;
-}
-
-.security-note span {
-  color: #bbb;
-}
-
-.bottom {
-  min-height: 52px;
-  border-top: 1px solid #1c1c1c;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 7%;
-  color: #555;
-  font-size: 10px;
-  gap: 15px;
-}
-
-.bottom .english {
+  margin-top: 23px;
   direction: ltr;
-  letter-spacing: 2px;
 }
 
-@media (max-width: 760px) {
-  .topbar {
-    padding: 0 6%;
-    height: 68px;
+@media (max-width: 420px) {
+  .card {
+    padding: 23px 18px;
   }
-
-  .status {
-    font-size: 9px;
-  }
-
-  main {
-    padding: 40px 18px;
-  }
-
-  .layout {
-    max-width: 440px;
-    grid-template-columns: 1fr;
-    gap: 38px;
-  }
-
-  .intro {
-    text-align: center;
-  }
-
-  .eyebrow {
-    justify-content: center;
-    margin-bottom: 23px;
-  }
-
-  .big-logo {
-    width: 75px;
-    height: 75px;
-    margin: 0 auto 32px;
-  }
-
-  .big-logo span {
-    font-size: 31px;
-  }
-
-  .intro h1 {
-    font-size: 38px;
-  }
-
-  .intro h1 span {
-    font-size: 19px;
-  }
-
-  .description {
-    margin: 14px auto 0;
-    max-width: 330px;
-    font-size: 12px;
-  }
-
-  .decorative-line {
-    margin: 23px auto 0;
-    width: 100px;
-  }
-
-  .panel {
-    justify-self: center;
-    padding: 25px 22px;
-  }
-
-  .bottom {
-    padding: 15px 6%;
-    flex-wrap: wrap;
+  .brand h1 {
+    font-size: 25px;
   }
 }
 </style>
@@ -493,209 +253,341 @@ main {
 
 <body>
 
-<div class="background"></div>
+<div class="background">
+  <div class="circle one"></div>
+  <div class="circle two"></div>
+  <div class="circle three"></div>
+</div>
 
-<header class="topbar">
-  <div class="brand">
-    <div class="brand-symbol"><span>●</span></div>
-    <div class="brand-name">
-      GOL YA POOCH
-      <small>THE HIDDEN GAME</small>
+<main class="container">
+
+  <header class="brand">
+    <div class="logo"><span>گ</span></div>
+    <h1>گل یا پوچ</h1>
+    <p>یک بازی، هزار راه برای بردن</p>
+  </header>
+
+  <section class="card">
+
+    <div class="tabs">
+      <button class="tab active" id="loginTab" type="button">
+        ورود
+      </button>
+
+      <button class="tab" id="registerTab" type="button">
+        ساخت حساب
+      </button>
     </div>
-  </div>
 
-  <div class="status">آمادهٔ شروع</div>
-</header>
+    <h2 id="formTitle">خوش برگشتی!</h2>
 
-<main>
-  <div class="layout">
+    <p class="subtitle" id="formSubtitle">
+      برای ورود به حساب بازی، اطلاعاتت رو وارد کن.
+    </p>
 
-    <section class="intro">
-      <div class="eyebrow">یک بازی، هزار فریب</div>
+    <form id="accountForm">
 
-      <div class="big-logo">
-        <span>●</span>
+      <div class="field" id="usernameField" hidden>
+        <label for="username">نام کاربری بازیکن</label>
+        <input
+          id="username"
+          type="text"
+          placeholder="مثلاً player123"
+          minlength="3"
+          maxlength="20"
+          autocomplete="username"
+        >
       </div>
 
-      <h1>
-        گل یا پوچ
-        <span>GOL YA POOCH</span>
-      </h1>
-
-      <p class="description">
-        همه‌چیز از یک انتخاب شروع می‌شود.
-        به بازی وارد شو، شخصیتت را بساز و
-        مهارتت را پشت هر حرکت پنهان کن.
-      </p>
-
-      <div class="decorative-line"></div>
-    </section>
-
-    <section class="panel">
-
-      <div class="panel-heading">
-        <div class="number">PLAYER ACCESS / 001</div>
-        <h2 id="formTitle">خوش برگشتی</h2>
-        <p id="formSubtitle">برای ورود به دنیای بازی، وارد حسابت شو.</p>
+      <div class="field">
+        <label for="email">ایمیل</label>
+        <input
+          id="email"
+          type="email"
+          placeholder="name@example.com"
+          autocomplete="email"
+          required
+        >
       </div>
 
-      <div class="tabs">
-        <button class="tab active" id="loginTab" type="button"
-          onclick="switchForm('login')">
-          ورود به حساب
-        </button>
-
-        <button class="tab" id="registerTab" type="button"
-          onclick="switchForm('register')">
-          ساخت حساب
-        </button>
+      <div class="field">
+        <label for="password">رمز عبور</label>
+        <input
+          id="password"
+          type="password"
+          placeholder="رمز عبورت"
+          minlength="8"
+          autocomplete="current-password"
+          required
+        >
       </div>
 
-      <form id="accountForm">
-
-        <div class="field">
-          <label for="username">نام کاربری</label>
-          <input
-            id="username"
-            name="username"
-            type="text"
-            placeholder="نام کاربری خودت را وارد کن"
-            minlength="3"
-            maxlength="20"
-            autocomplete="username"
-            required
-          >
-        </div>
-
-        <div class="field">
-          <label for="password">رمز عبور</label>
-          <input
-            id="password"
-            name="password"
-            type="password"
-            placeholder="رمز عبورت را وارد کن"
-            minlength="8"
-            autocomplete="current-password"
-            required
-          >
-        </div>
-
-        <div class="field" id="confirmField" hidden>
-          <label for="confirmPassword">تکرار رمز عبور</label>
-          <input
-            id="confirmPassword"
-            name="confirmPassword"
-            type="password"
-            placeholder="رمز عبور را دوباره وارد کن"
-            minlength="8"
-            autocomplete="new-password"
-          >
-        </div>
-
-        <button class="primary" id="submitButton" type="submit">
-          ورود به بازی
-        </button>
-
-        <div class="message" id="message" role="status"></div>
-
-      </form>
-
-      <div class="security-note">
-        <span>◆</span>
-        <div>
-          حساب کاربری برای ذخیرهٔ پیشرفت، سطح و انگشترهای توست.
-          سیستم واقعی حساب‌ها در مرحلهٔ بعد متصل می‌شود.
-        </div>
+      <div class="field" id="confirmField" hidden>
+        <label for="confirmPassword">تکرار رمز عبور</label>
+        <input
+          id="confirmPassword"
+          type="password"
+          placeholder="رمز عبورت رو دوباره وارد کن"
+          minlength="8"
+          autocomplete="new-password"
+        >
       </div>
 
-    </section>
+      <button class="submit" id="submitButton" type="submit">
+        ورود به حساب
+      </button>
 
-  </div>
+      <div
+        class="message"
+        id="message"
+        role="status"
+        aria-live="polite"
+      ></div>
+
+    </form>
+  </section>
+
+  <footer class="footer">
+    GOL YA POOCH · PLAYER ACCESS
+  </footer>
+
 </main>
 
-<footer class="bottom">
-  <div>نسخهٔ اولیهٔ پروژه</div>
-  <div class="english">GYP PROJECT / 2026</div>
-</footer>
-
 <script>
-let currentForm = "login";
 
-const form = document.getElementById("accountForm");
-const title = document.getElementById("formTitle");
-const subtitle = document.getElementById("formSubtitle");
-const submitButton = document.getElementById("submitButton");
+/* =====================================================
+   🔴🔴🔴 بخش اتصال شماره ۱: آدرس پروژه 🔴🔴🔴
+
+   عبارت داخل کوتیشن را با API URL خودت عوض کن.
+   آدرس را از Supabase > Data API برداشتی.
+   ===================================================== */
+
+const SUPABASE_URL = "https://ewdsxuoimazoibfzuhih.supabase.co/rest/v1/ ;
+
+
+/* =====================================================
+   🔴🔴🔴 بخش اتصال شماره ۲: کلید عمومی 🔴🔴🔴
+
+   عبارت داخل کوتیشن را با Publishable key خودت عوض کن.
+   کلید را از Project Settings > API Keys برداشتی.
+   ===================================================== */
+
+const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_WGnkiOWxaEQYs89xxkLp2Q_HCUBbSfw ;
+
+
+/* =====================================================
+   از این خط به بعد، کد اصلی سایت است.
+   این بخش‌ها را تغییر نده.
+   ===================================================== */
+
+const loginTab = document.getElementById("loginTab");
+const registerTab = document.getElementById("registerTab");
+const accountForm = document.getElementById("accountForm");
+
+const formTitle = document.getElementById("formTitle");
+const formSubtitle = document.getElementById("formSubtitle");
+
+const usernameField = document.getElementById("usernameField");
 const confirmField = document.getElementById("confirmField");
-const confirmPassword = document.getElementById("confirmPassword");
-const password = document.getElementById("password");
-const message = document.getElementById("message");
 
-function switchForm(mode) {
-  currentForm = mode;
+const usernameInput = document.getElementById("username");
+const emailInput = document.getElementById("email");
+const passwordInput = document.getElementById("password");
+const confirmPasswordInput = document.getElementById("confirmPassword");
 
-  const isRegister = mode === "register";
+const submitButton = document.getElementById("submitButton");
+const messageBox = document.getElementById("message");
 
-  document.getElementById("loginTab").classList.toggle(
-    "active", !isRegister
-  );
+let mode = "login";
+let client = null;
 
-  document.getElementById("registerTab").classList.toggle(
-    "active", isRegister
-  );
-
-  title.textContent = isRegister ? "ساخت حساب جدید" : "خوش برگشتی";
-
-  subtitle.textContent = isRegister
-    ? "حساب خودت را بساز و ماجراجویی را آغاز کن."
-    : "برای ورود به دنیای بازی، وارد حسابت شو.";
-
-  submitButton.textContent = isRegister
-    ? "ساخت حساب"
-    : "ورود به بازی";
-
-  confirmField.hidden = !isRegister;
-  confirmPassword.required = isRegister;
-
-  password.autocomplete = isRegister
-    ? "new-password"
-    : "current-password";
-
-  message.style.display = "none";
+function showMessage(text, type) {
+  messageBox.textContent = text;
+  messageBox.className = "message show " + type;
 }
 
-form.addEventListener("submit", function(event) {
+function clearMessage() {
+  messageBox.textContent = "";
+  messageBox.className = "message";
+}
+
+function setMode(nextMode) {
+  mode = nextMode;
+  clearMessage();
+
+  const registering = mode === "register";
+
+  loginTab.classList.toggle("active", !registering);
+  registerTab.classList.toggle("active", registering);
+
+  usernameField.hidden = !registering;
+  confirmField.hidden = !registering;
+
+  usernameInput.required = registering;
+  confirmPasswordInput.required = registering;
+
+  passwordInput.autocomplete =
+    registering ? "new-password" : "current-password";
+
+  formTitle.textContent =
+    registering ? "حساب جدید بساز" : "خوش برگشتی!";
+
+  formSubtitle.textContent = registering
+    ? "ثبت‌نام کن و ماجراجویی‌ات رو شروع کن."
+    : "برای ورود به حساب بازی، اطلاعاتت رو وارد کن.";
+
+  submitButton.textContent =
+    registering ? "ساخت حساب بازیکن" : "ورود به حساب";
+}
+
+loginTab.addEventListener("click", () => setMode("login"));
+registerTab.addEventListener("click", () => setMode("register"));
+
+function friendlyError(error) {
+  const text = String(error.message || "").toLowerCase();
+
+  if (text.includes("invalid login credentials")) {
+    return "ایمیل یا رمز عبور اشتباهه.";
+  }
+
+  if (text.includes("already registered")) {
+    return "این ایمیل قبلاً ثبت شده؛ وارد حسابت شو.";
+  }
+
+  if (
+    text.includes("duplicate key") ||
+    text.includes("profiles_username_lower_unique")
+  ) {
+    return "این نام کاربری قبلاً انتخاب شده؛ یکی دیگه انتخاب کن.";
+  }
+
+  if (text.includes("password") && text.includes("at least")) {
+    return "رمز عبور کوتاهه؛ یک رمز قوی‌تر انتخاب کن.";
+  }
+
+  if (text.includes("user already registered")) {
+    return "این ایمیل قبلاً ثبت شده.";
+  }
+
+  if (text.includes("fetch")) {
+    return "اتصال برقرار نشد؛ آدرس پروژه و اینترنت رو بررسی کن.";
+  }
+
+  return "عملیات انجام نشد. اتصال و اطلاعات واردشده رو بررسی کن.";
+}
+
+accountForm.addEventListener("submit", async (event) => {
   event.preventDefault();
+  clearMessage();
 
-  const username = document.getElementById("username").value.trim();
-
-  if (username.length < 3) {
-    showMessage("نام کاربری باید حداقل ۳ نویسه داشته باشد.");
+  if (!client) {
+    showMessage(
+      "اتصال هنوز تنظیم نشده. دو مقدار ابتدای کد را بررسی کن.",
+      "error"
+    );
     return;
   }
 
-  if (password.value.length < 8) {
-    showMessage("رمز عبور باید حداقل ۸ نویسه داشته باشد.");
-    return;
-  }
+  const email = emailInput.value.trim();
+  const password = passwordInput.value;
 
-  if (currentForm === "register" &&
-      password.value !== confirmPassword.value) {
-    showMessage("رمز عبور و تکرار آن یکسان نیستند.");
-    return;
-  }
+  submitButton.disabled = true;
+  submitButton.textContent = "کمی صبر کن...";
 
-  showMessage(
-    currentForm === "register"
-      ? "ظاهر ثبت‌نام آماده است؛ برای ساخت حساب واقعی باید سیستم امن حساب کاربری را متصل کنیم."
-      : "ظاهر ورود آماده است؛ برای بررسی نام کاربری و رمز عبور باید سیستم حساب کاربری را متصل کنیم."
-  );
+  try {
+    if (mode === "register") {
+      const username = usernameInput.value.trim();
+      const confirmPassword = confirmPasswordInput.value;
+
+      if (!/^[a-zA-Z0-9_]{3,20}$/.test(username)) {
+        showMessage(
+          "نام کاربری باید ۳ تا ۲۰ حرف انگلیسی، عدد یا زیرخط داشته باشه.",
+          "error"
+        );
+        return;
+      }
+
+      if (password.length < 8) {
+        showMessage(
+          "رمز عبور باید حداقل ۸ کاراکتر داشته باشه.",
+          "error"
+        );
+        return;
+      }
+
+      if (password !== confirmPassword) {
+        showMessage("رمز عبورها یکسان نیستن.", "error");
+        return;
+      }
+
+      const { data, error } = await client.auth.signUp({
+        email: email,
+        password: password,
+        options: {
+          data: {
+            username: username
+          }
+        }
+      });
+
+      if (error) throw error;
+
+      if (data.session) {
+        showMessage(
+          "حساب ساخته شد! ثبت‌نام موفق بود.",
+          "success"
+        );
+      } else {
+        showMessage(
+          "ثبت‌نام انجام شد! ایمیلت رو بررسی کن و در صورت درخواست، حسابت رو تأیید کن.",
+          "success"
+        );
+      }
+
+    } else {
+      const { error } = await client.auth.signInWithPassword({
+        email: email,
+        password: password
+      });
+
+      if (error) throw error;
+
+      showMessage(
+        "با موفقیت وارد شدی! حساب بازیکنت آماده‌ست.",
+        "success"
+      );
+    }
+
+  } catch (error) {
+    showMessage(friendlyError(error), "error");
+
+  } finally {
+    submitButton.disabled = false;
+    submitButton.textContent =
+      mode === "register" ? "ساخت حساب بازیکن" : "ورود به حساب";
+  }
 });
 
-function showMessage(text) {
-  message.textContent = text;
-  message.style.display = "block";
+
+/* ساخت اتصال Supabase */
+
+try {
+  if (
+    SUPABASE_URL.startsWith("https://") &&
+    SUPABASE_PUBLISHABLE_KEY.startsWith("sb_publishable_")
+  ) {
+    client = window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_PUBLISHABLE_KEY
+    );
+  }
+} catch (error) {
+  client = null;
 }
+
+setMode("login");
+
 </script>
 
 </body>
-      </html>
+</html>
